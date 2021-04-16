@@ -32,12 +32,52 @@ export const taskSlice = createSlice({
       };
       state.tasks = [newTask, ...state.tasks];
     },
+    // taskの編集
+    editTask: (state, action) => {
+      const task = state.tasks.find((t) => t.id === action.payload.id);
+      if (task) {
+        task.title = action.payload.title;
+      }
+    },
+    // どのtaskを選択しているか管理
+    selectTask: (state, action) => {
+      state.selectedTask = action.payload;
+    },
+    // Modalの管理
+    handleModalOpen: (state, action) => {
+      state.isModalOpen = action.payload;
+    },
+    // task完了未完了のチェックを変更
+    completeTask: (state, action) => {
+      const task = state.tasks.find((t) => t.id === action.payload.id);
+      if (task) {
+        task.completed = !task.completed;
+      }
+    },
+    // taskの削除
+    deleteTask: (state, action) => {
+      state.tasks = state.tasks.filter((t) => t.id !== action.payload.id);
+    },
   },
 });
 
-export const { createTask } = taskSlice.actions;
+export const {
+  createTask,
+  selectTask,
+  editTask,
+  handleModalOpen,
+  completeTask,
+  deleteTask,
+} = taskSlice.actions;
 
-export const selectTask = (state: RootState): TaskState["tasks"] =>
+export const selectTasks = (state: RootState): TaskState["tasks"] =>
   state.task.tasks;
+
+export const selectIsModalOpen = (state: RootState): TaskState["isModalOpen"] =>
+  state.task.isModalOpen;
+
+export const selectSelectedTask = (
+  state: RootState
+): TaskState["selectedTask"] => state.task.selectedTask;
 
 export default taskSlice.reducer;
